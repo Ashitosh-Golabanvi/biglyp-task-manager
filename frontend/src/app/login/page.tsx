@@ -123,18 +123,6 @@ export default function LoginPage() {
             {message}
           </p>
         )}
-
-        {/* Register navigation */}
-        <p className="text-center text-sm">
-          Don't have an account?{" "}
-          <button
-            type="button"
-            onClick={() => router.push("/register")}
-            className="underline font-medium"
-          >
-            Register
-          </button>
-        </p>
       </form>
     </main>
   );
