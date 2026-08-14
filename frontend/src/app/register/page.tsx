@@ -1,17 +1,21 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { API_URL } from "@/lib/api";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>,
@@ -20,6 +24,7 @@ export default function RegisterPage() {
 
     setLoading(true);
     setMessage("");
+    setSuccess(false);
 
     try {
       const response = await fetch(
@@ -30,8 +35,8 @@ export default function RegisterPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name,
-            email,
+            name: name.trim(),
+            email: email.trim(),
             password,
           }),
         },
@@ -41,12 +46,12 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         setMessage(
-          data.error ||
-            "Registration failed",
+          data.error || "Registration failed",
         );
         return;
       }
 
+      setSuccess(true);
       setMessage(
         "Registration successful! You can now login.",
       );
@@ -55,15 +60,10 @@ export default function RegisterPage() {
       setEmail("");
       setPassword("");
     } catch (error) {
-      console.error(
-        "Registration Error:",
-        error,
-      );
+      console.error("Registration Error:", error);
 
       setMessage(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong",
+        "Unable to connect to the server. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -110,7 +110,7 @@ export default function RegisterPage() {
             onChange={(e) =>
               setPassword(e.target.value)
             }
-            minLength={8}
+            minLength={6}
             required
           />
 
@@ -125,12 +125,18 @@ export default function RegisterPage() {
           </button>
 
           {message && (
-            <p className="text-center text-sm">
+            <p
+              className={`text-sm ${
+                success
+                  ? "text-green-600"
+                  : "text-red-600"
+              }`}
+            >
               {message}
             </p>
           )}
 
-          <div className="text-center text-sm pt-2">
+          <div className="text-center text-sm">
             Already have an account?{" "}
             <Link
               href="/login"
@@ -140,15 +146,25 @@ export default function RegisterPage() {
             </Link>
           </div>
 
-          <div className="text-center text-sm">
-            <Link
-              href="/"
-              className="underline"
+          {success && (
+            <button
+              type="button"
+              onClick={() => router.push("/login")}
+              className="w-full border p-2 rounded"
             >
-              Back to Home
-            </Link>
-          </div>
+              Go to Login
+            </button>
+          )}
         </form>
+
+        <div className="text-center mt-4">
+          <Link
+            href="/"
+            className="text-sm underline"
+          >
+            Back to Home
+          </Link>
+        </div>
       </div>
     </main>
   );
