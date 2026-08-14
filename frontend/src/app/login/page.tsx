@@ -140,6 +140,31 @@ export default function LoginPage() {
             {message}
           </p>
         )}
+
+        {/* Register navigation */}
+        <p className="text-center text-sm">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/register")
+            }
+            className="underline font-medium"
+          >
+            Register
+          </button>
+        </p>
+
+        {/* Home navigation */}
+        <button
+          type="button"
+          onClick={() =>
+            router.push("/")
+          }
+          className="w-full border p-2 rounded"
+        >
+          Back to Home
+        </button>
       </form>
     </main>
   );

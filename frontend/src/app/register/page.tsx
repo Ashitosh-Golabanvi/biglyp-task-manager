@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { API_URL } from "@/lib/api";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,12 +65,17 @@ export default function RegisterPage() {
       }
 
       setMessage(
-        "Registration successful!",
+        "Registration successful! Redirecting to login...",
       );
 
       setName("");
       setEmail("");
       setPassword("");
+
+      // Redirect to login after successful registration
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
     } catch (error) {
       console.error(
         "Registration Error:",
@@ -133,10 +141,35 @@ export default function RegisterPage() {
         </button>
 
         {message && (
-          <p className="text-sm">
+          <p className="text-sm text-center">
             {message}
           </p>
         )}
+
+        {/* Login navigation */}
+        <p className="text-center text-sm">
+          Already have an account?{" "}
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/login")
+            }
+            className="underline font-medium"
+          >
+            Login
+          </button>
+        </p>
+
+        {/* Home navigation */}
+        <button
+          type="button"
+          onClick={() =>
+            router.push("/")
+          }
+          className="w-full border p-2 rounded"
+        >
+          Back to Home
+        </button>
       </form>
     </main>
   );
