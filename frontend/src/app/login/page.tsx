@@ -22,6 +22,13 @@ export default function LoginPage() {
     setMessage("");
 
     try {
+      // Debug: check the API URL being used by the deployed frontend
+      console.log("API_URL:", API_URL);
+      console.log(
+        "LOGIN URL:",
+        `${API_URL}/api/auth/login`,
+      );
+
       const response = await fetch(
         `${API_URL}/api/auth/login`,
         {
@@ -36,7 +43,17 @@ export default function LoginPage() {
         },
       );
 
+      console.log(
+        "Login response status:",
+        response.status,
+      );
+
       const data = await response.json();
+
+      console.log(
+        "Login response data:",
+        data,
+      );
 
       if (!response.ok) {
         setMessage(
