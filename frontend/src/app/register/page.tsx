@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+
 import { API_URL } from "@/lib/api";
 
 export default function RegisterPage() {
@@ -20,18 +22,12 @@ export default function RegisterPage() {
     setMessage("");
 
     try {
-      console.log(
-        "API URL:",
-        `${API_URL}/api/auth/register`,
-      );
-
       const response = await fetch(
         `${API_URL}/api/auth/register`,
         {
           method: "POST",
           headers: {
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name,
@@ -41,17 +37,7 @@ export default function RegisterPage() {
         },
       );
 
-      console.log(
-        "Response Status:",
-        response.status,
-      );
-
       const data = await response.json();
-
-      console.log(
-        "Response Data:",
-        data,
-      );
 
       if (!response.ok) {
         setMessage(
@@ -62,7 +48,7 @@ export default function RegisterPage() {
       }
 
       setMessage(
-        "Registration successful!",
+        "Registration successful! You can now login.",
       );
 
       setName("");
@@ -86,58 +72,84 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-4 border rounded-lg p-6"
-      >
-        <h1 className="text-3xl font-bold">
-          Register
-        </h1>
-
-        <input
-          className="w-full border p-2 rounded"
-          placeholder="Name"
-          value={name}
-          onChange={(e) =>
-            setName(e.target.value)
-          }
-        />
-
-        <input
-          className="w-full border p-2 rounded"
-          placeholder="Email"
-          type="email"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-        />
-
-        <input
-          className="w-full border p-2 rounded"
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-        />
-
-        <button
-          disabled={loading}
-          className="w-full border p-2 rounded"
+      <div className="w-full max-w-md">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 border rounded-lg p-6"
         >
-          {loading
-            ? "Creating..."
-            : "Create Account"}
-        </button>
+          <h1 className="text-3xl font-bold">
+            Register
+          </h1>
 
-        {message && (
-          <p className="text-sm">
-            {message}
-          </p>
-        )}
-      </form>
+          <input
+            className="w-full border p-2 rounded"
+            placeholder="Name"
+            value={name}
+            onChange={(e) =>
+              setName(e.target.value)
+            }
+            required
+          />
+
+          <input
+            className="w-full border p-2 rounded"
+            placeholder="Email"
+            type="email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            required
+          />
+
+          <input
+            className="w-full border p-2 rounded"
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            minLength={8}
+            required
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full border p-2 rounded"
+          >
+            {loading
+              ? "Creating..."
+              : "Create Account"}
+          </button>
+
+          {message && (
+            <p className="text-center text-sm">
+              {message}
+            </p>
+          )}
+
+          <div className="text-center text-sm pt-2">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="underline font-medium"
+            >
+              Login
+            </Link>
+          </div>
+
+          <div className="text-center text-sm">
+            <Link
+              href="/"
+              className="underline"
+            >
+              Back to Home
+            </Link>
+          </div>
+        </form>
+      </div>
     </main>
   );
 }
