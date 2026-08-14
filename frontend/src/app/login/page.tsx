@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { API_URL } from "@/lib/api";
 
 export default function LoginPage() {
@@ -57,7 +55,9 @@ export default function LoginPage() {
         JSON.stringify(data.user),
       );
 
-      setMessage("Login successful!");
+      setMessage(
+        "Login successful!",
+      );
 
       router.push("/dashboard");
     } catch (error) {
@@ -78,73 +78,64 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4 border rounded-lg p-6"
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md space-y-4 border rounded-lg p-6"
+      >
+        <h1 className="text-3xl font-bold">
+          Login
+        </h1>
+
+        <input
+          className="w-full border p-2 rounded"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
+          required
+        />
+
+        <input
+          className="w-full border p-2 rounded"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+          required
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full border p-2 rounded"
         >
-          <h1 className="text-3xl font-bold">
-            Login
-          </h1>
+          {loading
+            ? "Logging in..."
+            : "Login"}
+        </button>
 
-          <input
-            className="w-full border p-2 rounded"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-            required
-          />
+        {message && (
+          <p className="text-center">
+            {message}
+          </p>
+        )}
 
-          <input
-            className="w-full border p-2 rounded"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-            required
-          />
-
+        {/* Register navigation */}
+        <p className="text-center text-sm">
+          Don't have an account?{" "}
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full border p-2 rounded"
+            type="button"
+            onClick={() => router.push("/register")}
+            className="underline font-medium"
           >
-            {loading
-              ? "Logging in..."
-              : "Login"}
+            Register
           </button>
-
-          {message && (
-            <p className="text-center text-sm">
-              {message}
-            </p>
-          )}
-
-          <div className="text-center text-sm pt-2">
-            Don't have an account?{" "}
-            <Link
-              href="/register"
-              className="underline font-medium"
-            >
-              Register
-            </Link>
-          </div>
-
-          <div className="text-center text-sm">
-            <Link
-              href="/"
-              className="underline"
-            >
-              Back to Home
-            </Link>
-          </div>
-        </form>
-      </div>
+        </p>
+      </form>
     </main>
   );
 }
